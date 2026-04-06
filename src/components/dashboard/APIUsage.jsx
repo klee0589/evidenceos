@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { RefreshCw, Zap, Clock, AlertTriangle, Activity } from "lucide-react";
 
+const API_BASE = "https://evidenceos-api.onrender.com";
+
 function StatCard({ label, value, sub }) {
   return (
     <div className="rounded-xl bg-secondary/40 border border-border/40 px-4 py-3 text-center">
@@ -44,65 +46,31 @@ function TableSection({ title, rows, cols }) {
   );
 }
 
-function buildMockData(plan) {
-  const limit = plan === "pro" ? 10000 : 100;
-  const calls = Math.floor(Math.random() * limit * 0.4);
-  const remaining = limit - calls;
-  const now = new Date();
-  const resetsAt = new Date(now);
-  resetsAt.setUTCHours(24, 0, 0, 0);
-
-  const systems = ["google-workspace", "github", "aws", "okta", "azure-ad", "salesforce"];
-  const bySystem = systems.slice(0, 4).map(s => ({
-    system: s,
-    calls: Math.floor(Math.random() * (calls / 3)),
-    errors: Math.floor(Math.random() * 2),
-    avg_ms: 80 + Math.random() * 120,
-  }));
-
-  const daily = Array.from({ length: 7 }, (_, i) => {
-    const d = new Date(now);
-    d.setDate(d.getDate() - (6 - i));
-    const dayCalls = i === 6 ? calls : Math.floor(Math.random() * limit * 0.3);
-    return {
-      date: d.toISOString().slice(0, 10),
-      calls: dayCalls,
-      errors: Math.floor(Math.random() * 3),
-      avg_ms: 80 + Math.random() * 100,
-    };
-  });
-
-  const totalCalls = daily.reduce((s, d) => s + d.calls, 0);
-  const totalErrors = daily.reduce((s, d) => s + d.errors, 0);
-
-  return {
-    today: { calls, remaining, limit, resetsAt: resetsAt.toISOString() },
-    period: { totalCalls, totalErrors, avgResponseMs: 95 + Math.random() * 40 },
-    bySystem,
-    byEndpoint: [
-      { endpoint: "/api/demo/access-review", calls: Math.floor(calls * 0.8), errors: totalErrors, avg_ms: 90 },
-      { endpoint: "/api/usage", calls: Math.floor(calls * 0.2), errors: 0, avg_ms: 45 },
-    ],
-    daily,
-  };
-}
-
 export default function APIUsage({ apiKey, plan }) {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [refreshing, setRefreshing] = useState(false);
 
-  const fetchUsage = (isRefresh = false) => {
+  const fetchUsage = async (isRefresh = false) => {
     if (isRefresh) setRefreshing(true);
     else setLoading(true);
-    setTimeout(() => {
-      setData(buildMockData(plan));
+    setError(null);
+    try {
+      const res = await fetch(`${API_BASE}/api/usage`, {
+        headers: { "x-api-key": apiKey },
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      setData(await res.json());
+    } catch (e) {
+      setError(e.message);
+    } finally {
       setLoading(false);
       setRefreshing(false);
-    }, 600);
+    }
   };
 
-  useEffect(() => { fetchUsage(); }, [plan]);
+  useEffect(() => { if (apiKey) fetchUsage(); }, [apiKey]);
 
   const today = data?.today || {};
   const period = data?.period || {};
@@ -130,6 +98,14 @@ export default function APIUsage({ apiKey, plan }) {
           <div className="flex items-center gap-3 text-muted-foreground py-6">
             <div className="w-5 h-5 border-2 border-border border-t-primary rounded-full animate-spin" />
             <span className="text-sm">Fetching usage data…</span>
+          </div>
+        ) : error ? (
+          <div className="py-4">
+            <p className="text-sm text-muted-foreground">
+              Could not load usage data.{" "}
+              <button onClick={() => fetchUsage()} className="text-primary underline underline-offset-2">Retry</button>
+            </p>
+            <p className="text-xs text-muted-foreground/50 mt-1 font-mono">{error}</p>
           </div>
         ) : (
           <>
