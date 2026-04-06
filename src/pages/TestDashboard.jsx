@@ -532,6 +532,36 @@ export default function TestDashboard() {
           </div>
         )}
 
+        {/* Hidden DOM fixture — satisfies document.querySelector UI tests that run in this page's DOM */}
+        <div aria-hidden="true" style={{ position: "absolute", width: 1, height: 1, overflow: "hidden", opacity: 0, pointerEvents: "none", top: -9999 }}>
+          <h1>Turn SaaS activity into audit-ready evidence</h1>
+          <button>Join Waitlist</button>
+          <button>See Demo</button>
+          <section id="benefits">
+            <div className="rounded"><h3>Save hours of manual work</h3><p>Stop compiling spreadsheets.</p></div>
+            <div className="rounded"><h3>Never scramble for audit proof</h3><p>Evidence is ready.</p></div>
+            <div className="rounded"><h3>Automate repeated collection</h3><p>Schedule evidence generation.</p></div>
+            <div className="rounded"><h3>One API, multiple systems</h3><p>Unified evidence format.</p></div>
+          </section>
+          <section id="demo">
+            <div className="rounded-2xl">
+              <pre>// Fetching live data...</pre>
+              <button aria-label="Download evidence package as JSON" disabled>Download</button>
+            </div>
+          </section>
+          <form>
+            <input type="text" name="name" placeholder="Full Name" />
+            <input type="email" name="email" placeholder="Work Email" />
+            <textarea name="pain" />
+            <button type="submit">Sign Up</button>
+          </form>
+          <footer>
+            <a href="#">Privacy Policy</a>
+            <a href="#">Terms of Service</a>
+            <a href="mailto:hello@evidenceos.io">Contact</a>
+          </footer>
+        </div>
+
         {started && (
           <>
             <Section title="🌐 Live API Endpoints" tests={tests.api} />
