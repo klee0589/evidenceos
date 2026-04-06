@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { Cloud, ShieldCheck, Download, ArrowRight } from "lucide-react";
+import { base44 } from "@/api/base44Client";
 
 const STEPS = [
   {
@@ -56,12 +57,20 @@ export default function WorkflowDiagram() {
                 transition={{ duration: 0.5, delay: i * 0.15 }}
                 className="relative flex-1 w-full md:max-w-none"
               >
-                <div className="p-6 rounded-2xl border border-border/60 bg-card hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5 hover:-translate-y-1 transition-all duration-300 text-center md:text-left">
+                <div
+                  className="p-6 rounded-2xl border border-border/60 bg-card hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5 hover:-translate-y-1 transition-all duration-300 text-center md:text-left"
+                  onMouseEnter={() => base44.analytics.track({ eventName: "workflow_step_hover", properties: { step: s.step } })}
+                >
                   <div className={`w-12 h-12 rounded-xl border flex items-center justify-center mb-4 mx-auto md:mx-0 ${s.bg}`}>
                     <s.icon className={`w-6 h-6 ${s.color}`} />
                   </div>
                   <div className={`text-xs font-bold mb-1 ${s.color}`}>{s.step}</div>
-                  <h3 className="text-base font-semibold mb-2">{s.title}</h3>
+                  <div className="flex items-center gap-2 mb-2 justify-center md:justify-start">
+                    <h3 className="text-base font-semibold">{s.title}</h3>
+                    {i === 1 && (
+                      <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full border border-violet-500/30 bg-violet-500/10 text-violet-400">Live data: Pro</span>
+                    )}
+                  </div>
                   <p className="text-sm text-muted-foreground leading-relaxed mb-3">{s.description}</p>
                   <code className={`text-[11px] font-mono px-2 py-1 rounded-md bg-secondary/60 ${s.color}`}>{s.detail}</code>
                 </div>

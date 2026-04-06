@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
-import { AlertTriangle, CheckCircle2, FileDown } from "lucide-react";
+import { AlertTriangle, CheckCircle2, FileDown, Lock } from "lucide-react";
+import { base44 } from "@/api/base44Client";
 
 function JSONMock({ lines }) {
   return (
@@ -78,10 +79,32 @@ const CASES = [
   },
 ];
 
-export default function UseCases() {
+// Free-only systems (Google Workspace=0, AWS=2 by index)
+const FREE_RESTRICTED = [0, 2];
+
+export default function UseCases({ plan }) {
+  const isFree = !plan || plan === "free";
+
+  const scrollToPricing = () => {
+    document.getElementById("pricing")?.scrollIntoView({ behavior: "smooth" });
+    base44.analytics.track({ eventName: "usecase_tab_switch", properties: { from: "banner" } });
+  };
+
   return (
     <section className="py-24 border-t border-border/40">
       <div className="max-w-6xl mx-auto px-6">
+        {isFree && (
+          <div className="mb-8 flex items-center justify-between gap-4 px-5 py-3 rounded-xl border border-amber-500/30 bg-amber-500/5">
+            <p className="text-sm text-amber-300">Viewing demo data · Upgrade to Pro for live results</p>
+            <button
+              onClick={scrollToPricing}
+              className="flex-shrink-0 text-xs font-semibold text-amber-400 border border-amber-500/40 rounded-lg px-3 py-1.5 hover:bg-amber-500/10 transition-colors"
+            >
+              Try Pro →
+            </button>
+          </div>
+        )}
+
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -119,9 +142,16 @@ export default function UseCases() {
                   </div>
                   <h3 className="text-2xl md:text-3xl font-bold tracking-tight">{c.headline}</h3>
                   <p className="text-muted-foreground text-lg leading-relaxed">{c.caption}</p>
-                  <Badge className={`text-xs px-3 py-1 ${c.statusBadge.cls}`}>
-                    {c.statusBadge.label}
-                  </Badge>
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <Badge className={`text-xs px-3 py-1 ${c.statusBadge.cls}`}>
+                      {c.statusBadge.label}
+                    </Badge>
+                    {isFree && FREE_RESTRICTED.includes(i) && (
+                      <span className="inline-flex items-center gap-1 text-xs font-medium px-2.5 py-1 rounded-full border border-muted-foreground/20 bg-secondary/50 text-muted-foreground">
+                        <Lock className="w-3 h-3" /> Demo only
+                      </span>
+                    )}
+                  </div>
                 </div>
 
                 {/* Terminal mockup side */}

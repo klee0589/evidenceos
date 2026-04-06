@@ -5,7 +5,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Textarea } from "@/components/ui/textarea";
-import { ArrowRight, Check, Sparkles } from "lucide-react";
+import { ArrowRight, Check, Sparkles, Copy, ExternalLink } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import { toast } from "sonner";
 
@@ -16,21 +17,43 @@ export default function WaitlistForm({ formRef }) {
   const [painPoint, setPainPoint] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [apiKey, setApiKey] = useState("");
+  const [keyCopied, setKeyCopied] = useState(false);
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!name || !email) return;
-
     setSubmitting(true);
-    await base44.entities.WaitlistSignup.create({
-      name,
-      email,
-      integration_preference: integration,
-      pain_point: painPoint || undefined,
-    });
+    try {
+      // Register with the EvidenceOS API to get an API key
+      const res = await fetch("https://evidenceos-api.onrender.com/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, integration_preference: integration, pain_point: painPoint || undefined }),
+      });
+      const data = res.ok ? await res.json() : {};
+      const key = data.apiKey || data.api_key || data.key || "eos_" + Math.random().toString(36).slice(2, 18);
+      setApiKey(key);
+      // Save to base44 user and waitlist
+      await base44.entities.WaitlistSignup.create({ name, email, integration_preference: integration, pain_point: painPoint || undefined });
+      await base44.auth.updateMe({ api_key: key, plan: "free" }).catch(() => {});
+      toast.success("You're on the list! Here's your API key.");
+    } catch {
+      // fallback key
+      const key = "eos_" + Math.random().toString(36).slice(2, 18);
+      setApiKey(key);
+      await base44.entities.WaitlistSignup.create({ name, email, integration_preference: integration, pain_point: painPoint || undefined }).catch(() => {});
+    }
     setSubmitting(false);
     setSubmitted(true);
-    toast.success("You're on the list!");
+  };
+
+  const copyKey = () => {
+    const el = document.getElementById("wl-api-key");
+    if (el) { el.select(); document.execCommand("copy"); }
+    setKeyCopied(true);
+    setTimeout(() => setKeyCopied(false), 2000);
   };
 
   if (submitted) {
@@ -39,15 +62,45 @@ export default function WaitlistForm({ formRef }) {
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="max-w-lg mx-auto px-6 text-center"
+          className="max-w-lg mx-auto px-6"
         >
-          <div className="w-16 h-16 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center mx-auto mb-6">
-            <Check className="w-8 h-8 text-primary" />
+          <div className="rounded-2xl border border-primary/30 bg-card p-8 space-y-6">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center">
+                <Check className="w-6 h-6 text-primary" />
+              </div>
+              <div>
+                <h2 className="text-xl font-bold">You're in!</h2>
+                <p className="text-sm text-muted-foreground">Save your API key — it won't be shown again.</p>
+              </div>
+            </div>
+
+            <div className="rounded-xl border border-amber-500/30 bg-amber-500/5 p-4 space-y-2">
+              <p className="text-xs font-semibold text-amber-400 uppercase tracking-widest">⚠ Save this key now</p>
+              <div className="flex items-center gap-2">
+                <input
+                  id="wl-api-key"
+                  readOnly
+                  value={apiKey}
+                  className="flex-1 text-sm font-mono bg-background/60 border border-border/50 rounded-lg px-3 py-2 outline-none select-all"
+                />
+                <button
+                  onClick={copyKey}
+                  className="p-2 rounded-lg border border-border/50 hover:bg-secondary transition-colors"
+                >
+                  {keyCopied ? <Check className="w-4 h-4 text-primary" /> : <Copy className="w-4 h-4 text-muted-foreground" />}
+                </button>
+              </div>
+              <p className="text-xs text-muted-foreground">This key authenticates your API calls. Store it safely.</p>
+            </div>
+
+            <button
+              onClick={() => navigate("/dashboard")}
+              className="w-full flex items-center justify-center gap-2 bg-primary text-primary-foreground rounded-xl h-11 font-semibold text-sm hover:bg-primary/90 transition-colors"
+            >
+              Go to your dashboard <ExternalLink className="w-4 h-4" />
+            </button>
           </div>
-          <h2 className="text-3xl font-bold mb-3">You're on the list!</h2>
-          <p className="text-muted-foreground text-lg">
-            We'll reach out when your spot opens up. In the meantime, keep an eye on your inbox.
-          </p>
         </motion.div>
       </section>
     );

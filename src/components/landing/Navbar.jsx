@@ -5,17 +5,9 @@ import { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 
-export default function Navbar({ onWaitlistClick }) {
-  const [plan, setPlan] = useState(null);
-
-  useEffect(() => {
-    base44.auth.isAuthenticated().then(async (authed) => {
-      if (authed) {
-        const me = await base44.auth.me();
-        setPlan(me?.plan || "free");
-      }
-    });
-  }, []);
+export default function Navbar({ onWaitlistClick, user }) {
+  const plan = user?.plan || null;
+  const isLoggedIn = !!user;
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 border-b border-border/50 backdrop-blur-xl bg-background/80">
       <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
@@ -39,9 +31,17 @@ export default function Navbar({ onWaitlistClick }) {
               {plan === "pro" ? "Pro" : "Free"}
             </Badge>
           )}
-          <Button size="sm" onClick={onWaitlistClick} className="font-medium">
-            Get Free API Key
-          </Button>
+          {isLoggedIn ? (
+            <Link to="/dashboard">
+              <Button size="sm" className="font-semibold rounded-xl gap-1.5">
+                Dashboard →
+              </Button>
+            </Link>
+          ) : (
+            <Button size="sm" onClick={onWaitlistClick} className="font-semibold rounded-xl">
+              Get API Key
+            </Button>
+          )}
         </div>
       </div>
     </nav>
