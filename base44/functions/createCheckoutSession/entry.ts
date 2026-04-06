@@ -4,11 +4,12 @@ import Stripe from 'npm:stripe@14.21.0';
 const stripe = new Stripe(Deno.env.get('STRIPE_SECRET_KEY'));
 
 Deno.serve(async (req) => {
+  const body = await req.json();
   const base44 = createClientFromRequest(req);
   const user = await base44.auth.me();
   if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
 
-  const { success_url, cancel_url } = await req.json();
+  const { success_url, cancel_url } = body;
 
   const priceId = Deno.env.get('STRIPE_PRICE_ID');
   if (!priceId) return Response.json({ error: 'STRIPE_PRICE_ID not configured' }, { status: 500 });
