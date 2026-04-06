@@ -6,25 +6,28 @@ const STEPS = [
     icon: Cloud,
     step: "01",
     title: "Select System",
-    description: "Choose from Google Workspace, GitHub, AWS, or Okta via a single API parameter.",
+    description: "Use the system toggle to choose Google Workspace, GitHub, AWS, or Okta. Each selection fires a live API call — no config files, no connectors to set up.",
     color: "text-sky-400",
     bg: "bg-sky-500/10 border-sky-500/20",
+    detail: "GET /api/demo/access-review?system=github",
   },
   {
     icon: ShieldCheck,
     step: "02",
-    title: "Fetch & Review Users",
-    description: "EvidenceOS queries live data and returns structured, timestamped access records.",
+    title: "Fetch & Review",
+    description: "EvidenceOS queries live SaaS data and returns a structured JSON payload in milliseconds — with a status summary, flagged users, and an ISO timestamp ready for your auditor.",
     color: "text-primary",
     bg: "bg-primary/10 border-primary/20",
+    detail: '{ "status": "Warning", "users": 14, "flagged": 3 }',
   },
   {
     icon: Download,
     step: "03",
-    title: "Download / Take Action",
-    description: "Export audit-ready JSON reports or feed them directly into your GRC workflow.",
+    title: "Download & Share",
+    description: "Hit Download to export an audit-ready JSON report named evidenceos-{system}-access-review.json. Share with auditors, feed into your GRC tool, or archive — all tracked anonymously.",
     color: "text-violet-400",
     bg: "bg-violet-500/10 border-violet-500/20",
+    detail: "evidenceos-aws-access-review.json · 4.2 KB",
   },
 ];
 
@@ -59,7 +62,8 @@ export default function WorkflowDiagram() {
                   </div>
                   <div className={`text-xs font-bold mb-1 ${s.color}`}>{s.step}</div>
                   <h3 className="text-base font-semibold mb-2">{s.title}</h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed">{s.description}</p>
+                  <p className="text-sm text-muted-foreground leading-relaxed mb-3">{s.description}</p>
+                  <code className={`text-[11px] font-mono px-2 py-1 rounded-md bg-secondary/60 ${s.color}`}>{s.detail}</code>
                 </div>
               </motion.div>
 

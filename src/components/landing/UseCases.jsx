@@ -19,7 +19,7 @@ const CASES = [
     iconColor: "text-amber-400",
     iconBg: "bg-amber-500/10 border-amber-500/20",
     headline: "Google Workspace Audit",
-    caption: "Identify over-permissioned users instantly and take action.",
+    caption: "EvidenceOS flags over-permissioned users in real-time. See which accounts have excess roles or haven't logged in within 90 days — before your auditor does.",
     system: "google-workspace",
     statusBadge: { label: "Warning", cls: "bg-amber-500/15 text-amber-400 border-amber-500/30" },
     json: [
@@ -40,7 +40,7 @@ const CASES = [
     iconColor: "text-primary",
     iconBg: "bg-primary/10 border-primary/20",
     headline: "GitHub Repo Audit",
-    caption: "Ensure all repositories follow your security policy.",
+    caption: "Verify every GitHub user has MFA enabled and follows the principle of least privilege. Zero violations means a clean SOC 2 CC6 checkpoint.",
     system: "github",
     statusBadge: { label: "Pass", cls: "bg-emerald-500/15 text-emerald-400 border-emerald-500/30" },
     json: [
@@ -61,7 +61,7 @@ const CASES = [
     iconColor: "text-violet-400",
     iconBg: "bg-violet-500/10 border-violet-500/20",
     headline: "Download & Reporting",
-    caption: "Download reports and integrate with your internal workflow.",
+    caption: "One click exports a named, timestamped JSON file ready to hand to auditors, import into your GRC platform, or archive in your evidence repository.",
     system: null,
     statusBadge: { label: "Exported", cls: "bg-violet-500/15 text-violet-400 border-violet-500/30" },
     json: [
