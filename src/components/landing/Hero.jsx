@@ -29,9 +29,9 @@ export default function Hero({ onWaitlistClick, onDemoClick, heroImage }) {
           transition={{ duration: 0.6, delay: 0.1 }}
           className="text-4xl md:text-6xl lg:text-7xl font-extrabold tracking-tight leading-[1.08] mb-6"
         >
-          Turn SaaS activity into
+          See your user access
           <br />
-          <span className="text-primary">audit-ready evidence</span>
+          <span className="text-primary">in real-time.</span>
         </motion.h1>
 
         <motion.p
@@ -40,8 +40,8 @@ export default function Hero({ onWaitlistClick, onDemoClick, heroImage }) {
           transition={{ duration: 0.6, delay: 0.2 }}
           className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 leading-relaxed"
         >
-          Generate access-review evidence for Google Workspace &amp; GitHub in seconds.
-          One API call. Audit-ready JSON. Zero manual work.
+          Run audits across Google Workspace, GitHub, AWS, and Okta.
+          One API call returns structured, audit-ready JSON. Zero manual work.
         </motion.p>
 
         <motion.div

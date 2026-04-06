@@ -2,6 +2,8 @@ import { useRef } from "react";
 import Navbar from "../components/landing/Navbar";
 import Hero from "../components/landing/Hero";
 import Benefits from "../components/landing/Benefits";
+import WorkflowDiagram from "../components/landing/WorkflowDiagram";
+import UseCases from "../components/landing/UseCases";
 import APIDemo from "../components/landing/APIDemo";
 import WaitlistForm from "../components/landing/WaitlistForm";
 import Testimonials from "../components/landing/Testimonials";
@@ -26,6 +28,8 @@ export default function Landing() {
       <Navbar onWaitlistClick={scrollToWaitlist} />
       <Hero onWaitlistClick={scrollToWaitlist} onDemoClick={scrollToDemo} heroImage={HERO_IMAGE} />
       <Benefits />
+      <WorkflowDiagram />
+      <UseCases />
       <APIDemo />
       <WaitlistForm formRef={waitlistRef} />
       <Testimonials />
