@@ -369,10 +369,8 @@ export default function TestDashboard() {
       updateTest("apiDemo", id, res);
     }
 
-    // Restore analytics
-    base44.analytics.track = origTrack;
-
-    // Analytics event validation
+    // ── Analytics event validation (restore AFTER all validation is done)
+    // NOTE: restore is deferred until after all analytics checks below
     setRunningTest("apiDemo", "demo_analytics_toggle");
     const analyticsToggle = await runTest(async () => {
       const toggleEvents = capturedEvents.filter((e) => e.eventName === "api_demo_system_toggle");
@@ -381,7 +379,7 @@ export default function TestDashboard() {
       const systems = toggleEvents.map((e) => e.properties?.system);
       const missing = SYSTEMS.filter((s) => !systems.includes(s));
       if (missing.length) throw new Error(`Missing toggle events for: ${missing.join(", ")}`);
-      const hasPII = toggleEvents.some((e) => JSON.stringify(e).match(/email|name|password/i));
+      const hasPII = toggleEvents.some((e) => /"(email|full_name|phone|address|password)"\s*:/.test(JSON.stringify(e.properties || {})));
       if (hasPII) throw new Error("PII detected in analytics events!");
       return {
         message: `${toggleEvents.length} toggle events captured | systems: ${systems.join(", ")} | no PII`,
@@ -396,7 +394,7 @@ export default function TestDashboard() {
       base44.analytics.track({ eventName: "api_demo_copy", properties: { system: "google-workspace" } });
       const copyEvents = capturedEvents.filter((e) => e.eventName === "api_demo_copy");
       if (copyEvents.length === 0) throw new Error("No copy events captured");
-      const hasPII = copyEvents.some((e) => JSON.stringify(e).match(/email|name|password/i));
+      const hasPII = copyEvents.some((e) => /"(email|full_name|phone|address|password)"\s*:/.test(JSON.stringify(e.properties || {})));
       if (hasPII) throw new Error("PII detected in copy analytics events!");
       return { message: `${copyEvents.length} copy event(s) | no PII`, details: copyEvents };
     });
@@ -407,12 +405,15 @@ export default function TestDashboard() {
       const dlEvents = capturedEvents.filter((e) => e.eventName === "api_demo_download");
       if (dlEvents.length < SYSTEMS.length)
         throw new Error(`Expected ${SYSTEMS.length} download events, got ${dlEvents.length}`);
-      const hasPII = dlEvents.some((e) => JSON.stringify(e).match(/email|name|password/i));
+      const hasPII = dlEvents.some((e) => /"(email|full_name|phone|address|password)"\s*:/.test(JSON.stringify(e.properties || {})));
       if (hasPII) throw new Error("PII detected in download analytics events!");
       const systems = dlEvents.map((e) => e.properties?.system);
       return { message: `${dlEvents.length} download events | systems: ${systems.join(", ")} | no PII`, details: dlEvents };
     });
     updateTest("apiDemo", "demo_analytics_download", analyticsDownload);
+
+    // Restore analytics intercept now that all event validation is complete
+    base44.analytics.track = origTrack;
 
     // Loading state check
     setRunningTest("apiDemo", "demo_loading_state");
