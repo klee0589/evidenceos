@@ -5,6 +5,7 @@ import DashboardHeader from "@/components/dashboard/DashboardHeader";
 import QuickStart from "@/components/dashboard/QuickStart";
 import APISnippets from "@/components/dashboard/APISnippets";
 import ProCallout from "@/components/dashboard/ProCallout";
+import APIUsage from "@/components/dashboard/APIUsage";
 
 export default function Dashboard() {
   const [user, setUser] = useState(null);
@@ -50,6 +51,7 @@ export default function Dashboard() {
       <DashboardHeader user={user} plan={plan} />
 
       <main className="max-w-6xl mx-auto px-6 py-12 space-y-12">
+        <APIUsage apiKey={apiKey} plan={plan} />
         <QuickStart plan={plan} apiKey={apiKey} />
         <APISnippets apiKey={apiKey} />
         {plan !== "pro" && <ProCallout />}
