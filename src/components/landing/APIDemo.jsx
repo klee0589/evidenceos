@@ -1,34 +1,18 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Copy, Check, Terminal, ChevronRight } from "lucide-react";
+import { Copy, Check, Terminal, ChevronRight, RefreshCw } from "lucide-react";
 import { toast } from "sonner";
 
-const demoSystems = {
-  "Google Workspace": {
-    control: "Access Review",
-    system: "Google Workspace",
-    timestamp: "2026-04-05T12:00:00Z",
-    status: "Pass",
-    users: [
-      { email: "alice@example.com", role: "admin", mfa: true, last_login: "2026-04-04" },
-      { email: "bob@example.com", role: "member", mfa: false, last_login: "2026-03-28" },
-    ],
-    summary: "2/2 users reviewed, 1 MFA warning",
-  },
-  GitHub: {
-    control: "Access Review",
-    system: "GitHub",
-    timestamp: "2026-04-05T12:00:00Z",
-    status: "Pass",
-    users: [
-      { username: "alice-dev", role: "admin", two_factor: true, last_active: "2026-04-05" },
-      { username: "bob-ops", role: "member", two_factor: true, last_active: "2026-04-01" },
-    ],
-    summary: "2/2 users reviewed, all compliant",
-  },
-};
+const BASE_URL = "https://evidenceos-api.onrender.com/api/demo";
+
+const SYSTEMS = [
+  { label: "Google Workspace", key: "google-workspace" },
+  { label: "GitHub", key: "github" },
+  { label: "AWS", key: "aws" },
+  { label: "Okta", key: "okta" },
+];
 
 function SyntaxHighlight({ json }) {
   const text = JSON.stringify(json, null, 2);
@@ -40,18 +24,44 @@ function SyntaxHighlight({ json }) {
 
   return (
     <pre
-      className="text-sm leading-relaxed font-mono"
+      className="text-sm leading-relaxed font-mono whitespace-pre-wrap break-words"
       dangerouslySetInnerHTML={{ __html: highlighted }}
     />
   );
 }
 
 export default function APIDemo() {
-  const [activeSystem, setActiveSystem] = useState("Google Workspace");
+  const [activeSystem, setActiveSystem] = useState(SYSTEMS[0]);
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
   const [copied, setCopied] = useState(false);
 
+  const fetchData = async (system) => {
+    setLoading(true);
+    setError(null);
+    setData(null);
+    const url =
+      system.key === "google-workspace"
+        ? `${BASE_URL}/access-review`
+        : `${BASE_URL}/access-review?system=${system.key}`;
+    const res = await fetch(url, { mode: "cors" });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const json = await res.json();
+    setData(json);
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    fetchData(activeSystem).catch((e) => {
+      setError(e.message);
+      setLoading(false);
+    });
+  }, [activeSystem]);
+
   const handleCopy = () => {
-    navigator.clipboard.writeText(JSON.stringify(demoSystems[activeSystem], null, 2));
+    if (!data) return;
+    navigator.clipboard.writeText(JSON.stringify(data, null, 2));
     setCopied(true);
     toast.success("Copied to clipboard");
     setTimeout(() => setCopied(false), 2000);
@@ -72,7 +82,11 @@ export default function APIDemo() {
             See what the API returns
           </h2>
           <p className="mt-4 text-muted-foreground text-lg max-w-xl mx-auto">
-            One call to <code className="text-primary bg-primary/10 px-2 py-0.5 rounded-md text-sm font-mono">/v1/evidence/access-review</code> returns structured, audit-ready JSON.
+            One call to{" "}
+            <code className="text-primary bg-primary/10 px-2 py-0.5 rounded-md text-sm font-mono">
+              /api/demo/access-review
+            </code>{" "}
+            returns structured, audit-ready JSON.
           </p>
         </motion.div>
 
@@ -102,6 +116,7 @@ export default function APIDemo() {
                 variant="ghost"
                 size="sm"
                 onClick={handleCopy}
+                disabled={!data}
                 className="h-7 px-2 text-xs text-muted-foreground hover:text-foreground"
               >
                 {copied ? <Check className="w-3.5 h-3.5 mr-1" /> : <Copy className="w-3.5 h-3.5 mr-1" />}
@@ -110,58 +125,93 @@ export default function APIDemo() {
             </div>
 
             {/* System toggle */}
-            <div className="px-5 py-3 border-b border-border/30 flex items-center gap-2">
-              {Object.keys(demoSystems).map((sys) => (
+            <div className="px-5 py-3 border-b border-border/30 flex items-center gap-2 flex-wrap">
+              {SYSTEMS.map((sys) => (
                 <button
-                  key={sys}
+                  key={sys.key}
                   onClick={() => setActiveSystem(sys)}
                   className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
-                    activeSystem === sys
+                    activeSystem.key === sys.key
                       ? "bg-primary/15 text-primary border border-primary/30"
                       : "text-muted-foreground hover:text-foreground hover:bg-secondary/50 border border-transparent"
                   }`}
                 >
-                  {sys}
+                  {sys.label}
                 </button>
               ))}
             </div>
 
             {/* Request line */}
-            <div className="px-5 py-2.5 border-b border-border/20 flex items-center gap-2 text-xs font-mono">
-              <Badge className="bg-emerald-500/15 text-emerald-400 border-emerald-500/30 text-[10px] font-semibold px-1.5">
+            <div className="px-5 py-2.5 border-b border-border/20 flex items-center gap-2 text-xs font-mono overflow-hidden">
+              <Badge className="bg-emerald-500/15 text-emerald-400 border-emerald-500/30 text-[10px] font-semibold px-1.5 flex-shrink-0">
                 GET
               </Badge>
-              <span className="text-muted-foreground">
-                /v1/evidence/access-review?system=
-                <span className="text-foreground">{activeSystem.toLowerCase().replace(" ", "-")}</span>
+              <span className="text-muted-foreground truncate">
+                /api/demo/access-review
+                {activeSystem.key !== "google-workspace" && (
+                  <span>
+                    ?system=<span className="text-foreground">{activeSystem.key}</span>
+                  </span>
+                )}
               </span>
-              <ChevronRight className="w-3 h-3 text-muted-foreground ml-auto" />
-              <Badge className="bg-emerald-500/15 text-emerald-400 border-emerald-500/30 text-[10px] px-1.5">
-                200 OK
-              </Badge>
+              <ChevronRight className="w-3 h-3 text-muted-foreground ml-auto flex-shrink-0" />
+              {loading && (
+                <Badge className="bg-secondary/60 text-muted-foreground border-border/30 text-[10px] px-1.5 flex-shrink-0">
+                  Loading
+                </Badge>
+              )}
+              {!loading && !error && data && (
+                <Badge className="bg-emerald-500/15 text-emerald-400 border-emerald-500/30 text-[10px] px-1.5 flex-shrink-0">
+                  200 OK
+                </Badge>
+              )}
+              {error && !loading && (
+                <Badge className="bg-red-500/15 text-red-400 border-red-500/30 text-[10px] px-1.5 flex-shrink-0">
+                  Error
+                </Badge>
+              )}
             </div>
 
             {/* JSON body */}
-            <div className="p-5 overflow-x-auto max-h-[400px]">
-              <SyntaxHighlight json={demoSystems[activeSystem]} />
+            <div className="p-5 overflow-auto max-h-[420px] min-h-[200px] flex items-start">
+              {loading && (
+                <div className="flex items-center gap-3 text-muted-foreground text-sm m-auto">
+                  <RefreshCw className="w-4 h-4 animate-spin" />
+                  Fetching live data...
+                </div>
+              )}
+              {error && !loading && (
+                <div className="text-red-400 text-sm font-mono m-auto">// Error: {error}</div>
+              )}
+              {!loading && !error && data && <SyntaxHighlight json={data} />}
             </div>
           </div>
 
           {/* Status pills */}
-          <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
-            <div className="flex items-center gap-2 text-xs text-muted-foreground bg-secondary/50 rounded-full px-3 py-1.5 border border-border/40">
-              <div className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-              Status: {demoSystems[activeSystem].status}
+          {data && !loading && !error && (
+            <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
+              <div className="flex items-center gap-2 text-xs text-muted-foreground bg-secondary/50 rounded-full px-3 py-1.5 border border-border/40">
+                <div
+                  className={`w-1.5 h-1.5 rounded-full ${
+                    data.status === "Pass" ? "bg-emerald-400" : "bg-red-400"
+                  }`}
+                />
+                Status: {data.status}
+              </div>
+              {data.users && (
+                <div className="flex items-center gap-2 text-xs text-muted-foreground bg-secondary/50 rounded-full px-3 py-1.5 border border-border/40">
+                  <div className="w-1.5 h-1.5 rounded-full bg-sky-400" />
+                  {data.users.length} users reviewed
+                </div>
+              )}
+              {data.summary && (
+                <div className="flex items-center gap-2 text-xs text-muted-foreground bg-secondary/50 rounded-full px-3 py-1.5 border border-border/40">
+                  <div className="w-1.5 h-1.5 rounded-full bg-amber-400" />
+                  {data.summary}
+                </div>
+              )}
             </div>
-            <div className="flex items-center gap-2 text-xs text-muted-foreground bg-secondary/50 rounded-full px-3 py-1.5 border border-border/40">
-              <div className="w-1.5 h-1.5 rounded-full bg-sky-400" />
-              {demoSystems[activeSystem].users.length} users reviewed
-            </div>
-            <div className="flex items-center gap-2 text-xs text-muted-foreground bg-secondary/50 rounded-full px-3 py-1.5 border border-border/40">
-              <div className="w-1.5 h-1.5 rounded-full bg-amber-400" />
-              {demoSystems[activeSystem].summary}
-            </div>
-          </div>
+          )}
         </motion.div>
       </div>
     </section>
