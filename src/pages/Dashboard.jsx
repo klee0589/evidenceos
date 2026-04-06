@@ -17,7 +17,14 @@ export default function Dashboard() {
         base44.auth.redirectToLogin("/dashboard");
         return;
       }
-      const me = await base44.auth.me();
+      let me = await base44.auth.me();
+      // Auto-generate API key if missing
+      if (!me.api_key) {
+        const key = "eos_" + Array.from(crypto.getRandomValues(new Uint8Array(20)))
+          .map(b => b.toString(16).padStart(2, "0")).join("");
+        await base44.auth.updateMe({ api_key: key });
+        me = { ...me, api_key: key };
+      }
       setUser(me);
       setLoading(false);
     });

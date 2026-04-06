@@ -22,6 +22,11 @@
     "stripe_customer_id": {
       "type": "string",
       "title": "Stripe Customer ID"
+    },
+    "api_key": {
+      "type": "string",
+      "title": "API Key"
     }
-  }
+  },
+  "required": []
 }
