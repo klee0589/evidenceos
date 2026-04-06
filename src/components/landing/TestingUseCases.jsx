@@ -18,6 +18,11 @@ const USE_CASES = [
     title: "Mock Identity Providers",
     description: "Replace Okta, AWS, or GitHub with instant test data for development, testing, and CI/CD pipelines.",
   },
+  {
+    icon: CheckCircle2,
+    title: "Create Audit Evidence",
+    description: "Generate reports for SOC 2 / ISO demos, show customers what compliance output looks like—no real data required.",
+  },
 ];
 
 export default function TestingUseCases() {
@@ -40,7 +45,7 @@ export default function TestingUseCases() {
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="grid md:grid-cols-3 gap-6"
+          className="grid md:grid-cols-2 lg:grid-cols-4 gap-6"
         >
           {USE_CASES.map((useCase, i) => {
             const Icon = useCase.icon;

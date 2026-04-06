@@ -5,6 +5,7 @@ import Hero from "../components/landing/Hero";
 import QuickStartCode from "../components/landing/QuickStartCode";
 import SystemsSupported from "../components/landing/SystemsSupported";
 import TestingUseCases from "../components/landing/TestingUseCases";
+import ReportsSection from "../components/landing/ReportsSection";
 import APIDemo from "../components/landing/APIDemo";
 import AuthSection from "../components/landing/AuthSection";
 import WaitlistForm from "../components/landing/WaitlistForm";
@@ -43,6 +44,7 @@ export default function Landing() {
       <QuickStartCode />
       <SystemsSupported />
       <TestingUseCases />
+      <ReportsSection />
       <APIDemo />
       <AuthSection />
       <PricingSection user={user} scrollToWaitlist={scrollToWaitlist} />

@@ -19,7 +19,7 @@ export default function Hero({ onWaitlistClick, onDemoClick, heroImage }) {
           transition={{ duration: 0.6 }}
         >
           <Badge variant="outline" className="mb-6 px-4 py-1.5 text-xs font-medium border-primary/30 text-primary bg-primary/5">
-            Sandbox API · Test & Demo In Seconds
+            Sandbox + Report Engine · Zero Setup
           </Badge>
         </motion.div>
 
@@ -29,9 +29,9 @@ export default function Hero({ onWaitlistClick, onDemoClick, heroImage }) {
           transition={{ duration: 0.6, delay: 0.1 }}
           className="text-4xl md:text-6xl lg:text-7xl font-extrabold tracking-tight leading-[1.08] mb-6"
         >
-          Test Identity & Access Reviews
+          Sandbox API + Compliance Reports
           <br />
-          <span className="text-primary">Without Touching Real Systems</span>
+          <span className="text-primary">For Identity & Access Reviews</span>
         </motion.h1>
 
         <motion.p
@@ -40,7 +40,7 @@ export default function Hero({ onWaitlistClick, onDemoClick, heroImage }) {
           transition={{ duration: 0.6, delay: 0.2 }}
           className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-4 leading-relaxed"
         >
-          EvidenceOS is a sandbox API that simulates Okta, AWS, GitHub, Google Workspace, and more — returning audit-ready JSON for access reviews, compliance testing, and workflow demos. No real integrations. No setup.
+          EvidenceOS simulates Okta, AWS, GitHub, Google Workspace, and more—and generates audit-ready compliance reports. Test workflows, demo to customers, build evidence, and show value—all in seconds. No real data. No setup.
         </motion.p>
 
         <motion.p
