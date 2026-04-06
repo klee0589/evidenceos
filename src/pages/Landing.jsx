@@ -2,14 +2,13 @@ import { useRef, useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import Navbar from "../components/landing/Navbar";
 import Hero from "../components/landing/Hero";
-import Benefits from "../components/landing/Benefits";
-import WorkflowDiagram from "../components/landing/WorkflowDiagram";
-import UseCases from "../components/landing/UseCases";
-import WhyEvidenceOS from "../components/landing/WhyEvidenceOS";
+import QuickStartCode from "../components/landing/QuickStartCode";
+import SystemsSupported from "../components/landing/SystemsSupported";
+import TestingUseCases from "../components/landing/TestingUseCases";
 import APIDemo from "../components/landing/APIDemo";
+import AuthSection from "../components/landing/AuthSection";
 import WaitlistForm from "../components/landing/WaitlistForm";
 import PricingSection from "../components/landing/PricingSection";
-import Testimonials from "../components/landing/Testimonials";
 import Footer from "../components/landing/Footer";
 
 const HERO_IMAGE = "https://media.base44.com/images/public/69d2fa4ba58632a6c6429f1e/3d3c62bee_generated_7174fe43.png";
@@ -41,14 +40,13 @@ export default function Landing() {
     <div className="min-h-screen bg-background text-foreground">
       <Navbar onWaitlistClick={scrollToWaitlist} user={user} />
       <Hero onWaitlistClick={scrollToWaitlist} onDemoClick={scrollToDemo} heroImage={HERO_IMAGE} />
-      <Benefits />
-      <PricingSection user={user} scrollToWaitlist={scrollToWaitlist} />
-      <WhyEvidenceOS />
-      <WorkflowDiagram />
-      <UseCases plan={user?.plan || null} />
+      <QuickStartCode />
+      <SystemsSupported />
+      <TestingUseCases />
       <APIDemo />
+      <AuthSection />
+      <PricingSection user={user} scrollToWaitlist={scrollToWaitlist} />
       <WaitlistForm formRef={waitlistRef} />
-      <Testimonials />
       <Footer />
     </div>
   );
