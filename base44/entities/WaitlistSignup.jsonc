@@ -1,0 +1,32 @@
+{
+  "name": "WaitlistSignup",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "title": "Full Name"
+    },
+    "email": {
+      "type": "string",
+      "title": "Email"
+    },
+    "integration_preference": {
+      "type": "string",
+      "title": "Integration Preference",
+      "enum": [
+        "GitHub",
+        "Google Workspace",
+        "Both"
+      ]
+    },
+    "pain_point": {
+      "type": "string",
+      "title": "Biggest SOC 2 Pain Point"
+    }
+  },
+  "required": [
+    "name",
+    "email",
+    "integration_preference"
+  ]
+}
