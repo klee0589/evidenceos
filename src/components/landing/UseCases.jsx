@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
-import { AlertTriangle, CheckCircle2, FileDown, Lock } from "lucide-react";
+import { AlertTriangle, CheckCircle2, FileDown, Lock, ShieldAlert, Users } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 
 function JSONMock({ lines }) {
@@ -58,6 +58,48 @@ const CASES = [
   },
   {
     tag: "Scenario 03",
+    icon: ShieldAlert,
+    iconColor: "text-red-400",
+    iconBg: "bg-red-500/10 border-red-500/20",
+    headline: "Azure AD Access Review",
+    caption: "Detect Global Administrator accounts without MFA, guest users with active assignments, and stale identities across your Microsoft tenant.",
+    system: "azure-ad",
+    statusBadge: { label: "Fail", cls: "bg-red-500/15 text-red-400 border-red-500/30" },
+    json: [
+      { text: "{", cls: "text-foreground/70" },
+      { text: '  "status": "Fail",', cls: "text-red-400" },
+      { text: '  "summary": "4 critical violations detected",', cls: "text-red-400" },
+      { text: '  "timestamp": "2026-04-06T08:02:00Z",', cls: "text-sky-400" },
+      { text: '  "users": [', cls: "text-foreground/70" },
+      { text: '    { "upn": "admin@tenant.onmicrosoft.com", "role": "Global Administrator", "mfa_registered": false },', cls: "text-muted-foreground" },
+      { text: '    { "upn": "guest@partner.com", "role": "User", "guest": true, "flag": "stale_guest" }', cls: "text-muted-foreground" },
+      { text: "  ]", cls: "text-foreground/70" },
+      { text: "}", cls: "text-foreground/70" },
+    ],
+  },
+  {
+    tag: "Scenario 04",
+    icon: Users,
+    iconColor: "text-sky-400",
+    iconBg: "bg-sky-500/10 border-sky-500/20",
+    headline: "Salesforce User Review",
+    caption: "Surface Salesforce System Administrators with no recent login, inactive standard users still holding active licenses, and profile mismatches against your HRIS.",
+    system: "salesforce",
+    statusBadge: { label: "Warning", cls: "bg-amber-500/15 text-amber-400 border-amber-500/30" },
+    json: [
+      { text: "{", cls: "text-foreground/70" },
+      { text: '  "status": "Warning",', cls: "text-amber-400" },
+      { text: '  "summary": "2 inactive users with active licenses",', cls: "text-emerald-400" },
+      { text: '  "timestamp": "2026-04-06T08:03:00Z",', cls: "text-sky-400" },
+      { text: '  "users": [', cls: "text-foreground/70" },
+      { text: '    { "username": "j.doe@company.salesforce.com", "profile": "System Administrator", "last_login_days_ago": 110, "flag": "inactive_90d" },', cls: "text-muted-foreground" },
+      { text: '    { "username": "a.smith@company.salesforce.com", "profile": "Standard User", "last_login_days_ago": 7 }', cls: "text-muted-foreground" },
+      { text: "  ]", cls: "text-foreground/70" },
+      { text: "}", cls: "text-foreground/70" },
+    ],
+  },
+  {
+    tag: "Scenario 05",
     icon: FileDown,
     iconColor: "text-violet-400",
     iconBg: "bg-violet-500/10 border-violet-500/20",
@@ -66,21 +108,20 @@ const CASES = [
     system: null,
     statusBadge: { label: "Exported", cls: "bg-violet-500/15 text-violet-400 border-violet-500/30" },
     json: [
-      { text: "// evidenceos-aws-access-review.json", cls: "text-muted-foreground" },
+      { text: "// evidenceos-azure-ad-access-review.json", cls: "text-muted-foreground" },
       { text: "{", cls: "text-foreground/70" },
-      { text: '  "generated_at": "2026-04-06T08:02:00Z",', cls: "text-sky-400" },
-      { text: '  "system": "aws",', cls: "text-sky-400" },
-      { text: '  "status": "Warning",', cls: "text-amber-400" },
-      { text: '  "summary": "IAM users with broad permissions flagged",', cls: "text-emerald-400" },
-      { text: '  "total_users": 9,', cls: "text-violet-400" },
-      { text: '  "flagged": 2', cls: "text-amber-400" },
+      { text: '  "generated_at": "2026-04-06T08:05:00Z",', cls: "text-sky-400" },
+      { text: '  "system": "azure-ad",', cls: "text-sky-400" },
+      { text: '  "status": "Fail",', cls: "text-red-400" },
+      { text: '  "summary": "4 critical violations detected",', cls: "text-emerald-400" },
+      { text: '  "total_users": 15,', cls: "text-violet-400" },
+      { text: '  "flagged": 4', cls: "text-red-400" },
       { text: "}", cls: "text-foreground/70" },
     ],
   },
 ];
 
-// Free-only systems (Google Workspace=0, AWS=2 by index)
-const FREE_RESTRICTED = [0, 2];
+const FREE_RESTRICTED = [];
 
 export default function UseCases({ plan }) {
   const isFree = !plan || plan === "free";

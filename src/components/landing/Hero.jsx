@@ -19,7 +19,7 @@ export default function Hero({ onWaitlistClick, onDemoClick, heroImage }) {
           transition={{ duration: 0.6 }}
         >
           <Badge variant="outline" className="mb-6 px-4 py-1.5 text-xs font-medium border-primary/30 text-primary bg-primary/5">
-            Now in Private Beta · Free API Key Available
+            Developer Sandbox · Free API Key Available
           </Badge>
         </motion.div>
 
@@ -29,9 +29,9 @@ export default function Hero({ onWaitlistClick, onDemoClick, heroImage }) {
           transition={{ duration: 0.6, delay: 0.1 }}
           className="text-4xl md:text-6xl lg:text-7xl font-extrabold tracking-tight leading-[1.08] mb-6"
         >
-          Live Access Review API for
+          The Developer Sandbox for
           <br />
-          <span className="text-primary">Google Workspace, GitHub, AWS & Okta.</span>
+          <span className="text-primary">Access Reviews — Start Free, Upgrade to Pro.</span>
         </motion.h1>
 
         <motion.p
@@ -40,7 +40,7 @@ export default function Hero({ onWaitlistClick, onDemoClick, heroImage }) {
           transition={{ duration: 0.6, delay: 0.2 }}
           className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-4 leading-relaxed"
         >
-          One API call returns structured, timestamped JSON across all your SaaS systems — ready for auditors, GRC tools, or CI/CD pipelines.
+          8 systems. One API. Structured, timestamped JSON across Google Workspace, GitHub, AWS, Okta, Azure AD, Salesforce, Jira, and ServiceNow — ready for auditors, GRC tools, or CI/CD pipelines.
         </motion.p>
 
         <motion.p
