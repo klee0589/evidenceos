@@ -13,11 +13,11 @@ export default function DashboardHeader({ user, plan }) {
   const limit = API_LIMITS[plan] || 100;
 
   const copyKey = () => {
-    if (navigator.clipboard) {
-      navigator.clipboard.writeText(apiKey);
-    } else {
-      const el = document.getElementById("api-key-input");
-      if (el) { el.select(); document.execCommand("copy"); }
+    const el = document.getElementById("api-key-input");
+    if (el) {
+      el.select();
+      el.setSelectionRange(0, 99999);
+      document.execCommand("copy");
     }
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
