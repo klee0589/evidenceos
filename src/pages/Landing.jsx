@@ -4,6 +4,7 @@ import Hero from "../components/landing/Hero";
 import Benefits from "../components/landing/Benefits";
 import WorkflowDiagram from "../components/landing/WorkflowDiagram";
 import UseCases from "../components/landing/UseCases";
+import WhyEvidenceOS from "../components/landing/WhyEvidenceOS";
 import APIDemo from "../components/landing/APIDemo";
 import WaitlistForm from "../components/landing/WaitlistForm";
 import Testimonials from "../components/landing/Testimonials";
@@ -28,6 +29,7 @@ export default function Landing() {
       <Navbar onWaitlistClick={scrollToWaitlist} />
       <Hero onWaitlistClick={scrollToWaitlist} onDemoClick={scrollToDemo} heroImage={HERO_IMAGE} />
       <Benefits />
+      <WhyEvidenceOS />
       <WorkflowDiagram />
       <UseCases />
       <APIDemo />

@@ -29,19 +29,29 @@ export default function Hero({ onWaitlistClick, onDemoClick, heroImage }) {
           transition={{ duration: 0.6, delay: 0.1 }}
           className="text-4xl md:text-6xl lg:text-7xl font-extrabold tracking-tight leading-[1.08] mb-6"
         >
-          See your user access
+          Instant access reviews across
           <br />
-          <span className="text-primary">in real-time.</span>
+          <span className="text-primary">every system you own.</span>
         </motion.h1>
 
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 leading-relaxed"
+          className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-4 leading-relaxed"
         >
-          Run audits across Google Workspace, GitHub, AWS, and Okta.
-          One API call returns structured, audit-ready JSON. Zero manual work.
+          Google Workspace, GitHub, AWS, Okta — one API call returns structured,
+          timestamped JSON your auditors can use immediately.
+        </motion.p>
+
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.25 }}
+          className="text-base text-muted-foreground/70 max-w-xl mx-auto mb-10 leading-relaxed"
+        >
+          Security teams use EvidenceOS to catch over-permissioned accounts, prove compliance,
+          and eliminate the quarterly spreadsheet scramble — in seconds, not days.
         </motion.p>
 
         <motion.div
