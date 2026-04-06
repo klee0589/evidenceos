@@ -33,15 +33,14 @@ export default function Pricing() {
 
   useEffect(() => {
     const init = async () => {
-      const me = await base44.auth.me();
+      const authed = await base44.auth.isAuthenticated();
+      const me = authed ? await base44.auth.me() : null;
       setUser(me);
 
       // Handle checkout success redirect
       const params = new URLSearchParams(window.location.search);
       if (params.get("checkout") === "success" && me) {
-        // Update plan to pro after successful checkout
-        const users = await base44.entities.User.filter({ email: me.email });
-        if (users[0] && users[0].plan !== "pro") {
+        if (me.plan !== "pro") {
           await base44.auth.updateMe({ plan: "pro" });
           setUser({ ...me, plan: "pro" });
           setSuccessMsg("🎉 Welcome to Pro! Your plan has been upgraded.");
