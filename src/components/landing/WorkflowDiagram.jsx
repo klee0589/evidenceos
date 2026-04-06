@@ -56,7 +56,7 @@ export default function WorkflowDiagram() {
                 transition={{ duration: 0.5, delay: i * 0.15 }}
                 className="relative flex-1 w-full md:max-w-none"
               >
-                <div className="p-6 rounded-2xl border border-border/60 bg-card hover:border-border transition-colors text-center md:text-left">
+                <div className="p-6 rounded-2xl border border-border/60 bg-card hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5 hover:-translate-y-1 transition-all duration-300 text-center md:text-left">
                   <div className={`w-12 h-12 rounded-xl border flex items-center justify-center mb-4 mx-auto md:mx-0 ${s.bg}`}>
                     <s.icon className={`w-6 h-6 ${s.color}`} />
                   </div>

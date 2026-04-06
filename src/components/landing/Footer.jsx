@@ -15,6 +15,7 @@ export default function Footer() {
           </div>
 
           <div className="flex items-center gap-6 text-xs text-muted-foreground">
+            <a href="https://github.com/klee0589/evidenceos-api" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">API Docs</a>
             <a href="#" className="hover:text-foreground transition-colors">Privacy Policy</a>
             <a href="#" className="hover:text-foreground transition-colors">Terms of Service</a>
             <a href="mailto:hello@evidenceos.io" className="hover:text-foreground transition-colors">Contact</a>

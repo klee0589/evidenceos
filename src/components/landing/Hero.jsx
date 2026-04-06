@@ -19,7 +19,7 @@ export default function Hero({ onWaitlistClick, onDemoClick, heroImage }) {
           transition={{ duration: 0.6 }}
         >
           <Badge variant="outline" className="mb-6 px-4 py-1.5 text-xs font-medium border-primary/30 text-primary bg-primary/5">
-            Now in Private Beta
+            Now in Private Beta · Free API Key Available
           </Badge>
         </motion.div>
 
@@ -29,9 +29,9 @@ export default function Hero({ onWaitlistClick, onDemoClick, heroImage }) {
           transition={{ duration: 0.6, delay: 0.1 }}
           className="text-4xl md:text-6xl lg:text-7xl font-extrabold tracking-tight leading-[1.08] mb-6"
         >
-          Instant access reviews across
+          Live Access Review API for
           <br />
-          <span className="text-primary">every system you own.</span>
+          <span className="text-primary">Google Workspace, GitHub, AWS & Okta.</span>
         </motion.h1>
 
         <motion.p
@@ -40,8 +40,7 @@ export default function Hero({ onWaitlistClick, onDemoClick, heroImage }) {
           transition={{ duration: 0.6, delay: 0.2 }}
           className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-4 leading-relaxed"
         >
-          Google Workspace, GitHub, AWS, Okta — one API call returns structured,
-          timestamped JSON your auditors can use immediately.
+          One API call returns structured, timestamped JSON across all your SaaS systems — ready for auditors, GRC tools, or CI/CD pipelines.
         </motion.p>
 
         <motion.p
@@ -61,12 +60,12 @@ export default function Hero({ onWaitlistClick, onDemoClick, heroImage }) {
           className="flex flex-col sm:flex-row items-center justify-center gap-4"
         >
           <Button size="lg" onClick={onWaitlistClick} className="text-base px-8 h-12 font-semibold gap-2 group">
-            Join Waitlist
+            Get Free API Key
             <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
           </Button>
           <Button size="lg" variant="outline" onClick={onDemoClick} className="text-base px-8 h-12 font-semibold gap-2 border-border/60 hover:bg-secondary">
             <Play className="w-4 h-4" />
-            See Demo
+            See Live Demo
           </Button>
         </motion.div>
 

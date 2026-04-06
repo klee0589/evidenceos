@@ -4,23 +4,23 @@ import { motion } from "framer-motion";
 const benefits = [
   {
     icon: Clock,
-    title: "Save hours of manual work",
-    description: "Stop compiling spreadsheets and screenshots. EvidenceOS auto-generates structured evidence from live SaaS data.",
+    title: "Real-time system checks",
+    description: "Query live user-access data from Google Workspace, GitHub, AWS, and Okta in milliseconds — no stale exports, no manual pulls.",
   },
   {
     icon: ShieldCheck,
-    title: "Never scramble for audit proof",
-    description: "When auditors come knocking, your evidence is already formatted, timestamped, and ready to share.",
+    title: "Audit-ready export, instantly",
+    description: "Every response is timestamped, structured, and named for your auditor. Drop the JSON into your GRC tool or email it directly — no reformatting.",
   },
   {
     icon: RefreshCw,
-    title: "Automate repeated collection",
-    description: "Schedule evidence generation on a cadence. Access reviews, permission audits — all on autopilot.",
+    title: "Multi-system coverage",
+    description: "One unified API across Google Workspace, GitHub, AWS IAM, and Okta. Consistent JSON schema across every system you own.",
   },
   {
     icon: Zap,
-    title: "One API, multiple systems",
-    description: "Connect Google Workspace, GitHub, and more. Unified evidence format across all your SaaS tools.",
+    title: "Secure & privacy-first",
+    description: "Anonymous analytics only — no PII stored. All requests are authenticated and audit-logged, so you always know what ran and when.",
   },
 ];
 
