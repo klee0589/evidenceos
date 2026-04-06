@@ -7,6 +7,7 @@ import QuickStartCode from "../components/landing/QuickStartCode";
 import HowItWorks from "../components/landing/HowItWorks";
 import SystemsSupported from "../components/landing/SystemsSupported";
 import BuiltForDevelopers from "../components/landing/BuiltForDevelopers";
+import DeveloperOnboarding from "../components/landing/DeveloperOnboarding";
 import TestingUseCases from "../components/landing/TestingUseCases";
 import ReportsSection from "../components/landing/ReportsSection";
 import ResponseFormatExample from "../components/landing/ResponseFormatExample";
@@ -52,6 +53,7 @@ export default function Landing() {
       <HowItWorks />
       <SystemsSupported />
       <BuiltForDevelopers />
+      <DeveloperOnboarding />
       <TestingUseCases />
       <ReportsSection />
       <ResponseFormatExample />
