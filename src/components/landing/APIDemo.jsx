@@ -39,6 +39,9 @@ export default function APIDemo() {
   const [copied, setCopied] = useState(false);
   const [downloaded, setDownloaded] = useState(false);
 
+  // Buttons disabled when loading OR when no data / error
+  const actionsDisabled = loading || !data;
+
   const fetchData = async (system) => {
     setLoading(true);
     setError(null);
@@ -136,7 +139,7 @@ export default function APIDemo() {
                   variant="ghost"
                   size="sm"
                   onClick={handleCopy}
-                  disabled={!data}
+                  disabled={actionsDisabled}
                   className="h-7 px-2 text-xs text-muted-foreground hover:text-foreground"
                   aria-label="Copy JSON to clipboard"
                 >
@@ -147,7 +150,7 @@ export default function APIDemo() {
                   variant="ghost"
                   size="sm"
                   onClick={handleDownload}
-                  disabled={!data}
+                  disabled={actionsDisabled}
                   className="h-7 px-2 text-xs text-muted-foreground hover:text-foreground"
                   aria-label="Download evidence package as JSON"
                 >
@@ -208,13 +211,13 @@ export default function APIDemo() {
             {/* JSON body */}
             <div className="p-5 overflow-auto max-h-[420px] min-h-[200px] flex items-start">
               {loading && (
-                <div className="flex items-center gap-3 text-muted-foreground text-sm m-auto">
-                  <RefreshCw className="w-4 h-4 animate-spin" />
-                  Fetching live data...
-                </div>
+                <pre className="text-sm font-mono text-muted-foreground m-auto flex items-center gap-2">
+                  <RefreshCw className="w-4 h-4 animate-spin inline-block" />{" "}
+                  // Fetching live data...
+                </pre>
               )}
               {error && !loading && (
-                <div className="text-red-400 text-sm font-mono m-auto">// Error: {error}</div>
+                <pre className="text-sm font-mono text-red-400 m-auto">// Error: {error}</pre>
               )}
               {!loading && !error && data && <SyntaxHighlight json={data} />}
             </div>
