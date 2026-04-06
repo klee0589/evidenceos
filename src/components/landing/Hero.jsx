@@ -49,7 +49,7 @@ export default function Hero({ onWaitlistClick, onDemoClick, heroImage }) {
           transition={{ duration: 0.6, delay: 0.25 }}
           className="text-base text-muted-foreground/70 max-w-xl mx-auto mb-10 leading-relaxed"
         >
-          Get instant, structured data for testing access review workflows, building compliance features, and demoing identity governance — all in seconds.
+          Production-grade sandbox API with deterministic responses, webhook support, and compliance reporting. Test workflows, demo to customers, build evidence—all with synthetic data.
         </motion.p>
 
         <motion.div
