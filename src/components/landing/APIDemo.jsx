@@ -2,8 +2,9 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Copy, Check, Terminal, ChevronRight, RefreshCw } from "lucide-react";
+import { Copy, Check, Terminal, ChevronRight, RefreshCw, Download } from "lucide-react";
 import { toast } from "sonner";
+import { base44 } from "@/api/base44Client";
 
 const BASE_URL = "https://evidenceos-api.onrender.com/api/demo";
 
@@ -36,11 +37,13 @@ export default function APIDemo() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [copied, setCopied] = useState(false);
+  const [downloaded, setDownloaded] = useState(false);
 
   const fetchData = async (system) => {
     setLoading(true);
     setError(null);
     setData(null);
+    base44.analytics.track({ eventName: "api_demo_system_toggle", properties: { system: system.key } });
     const url =
       system.key === "google-workspace"
         ? `${BASE_URL}/access-review`
@@ -64,7 +67,23 @@ export default function APIDemo() {
     navigator.clipboard.writeText(JSON.stringify(data, null, 2));
     setCopied(true);
     toast.success("Copied to clipboard");
+    base44.analytics.track({ eventName: "api_demo_copy", properties: { system: activeSystem.key } });
     setTimeout(() => setCopied(false), 2000);
+  };
+
+  const handleDownload = () => {
+    if (!data) return;
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `evidenceos-${activeSystem.key}-access-review.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+    setDownloaded(true);
+    toast.success("Evidence package downloaded");
+    base44.analytics.track({ eventName: "api_demo_download", properties: { system: activeSystem.key } });
+    setTimeout(() => setDownloaded(false), 2000);
   };
 
   return (
@@ -112,16 +131,30 @@ export default function APIDemo() {
                   <span className="font-mono">response.json</span>
                 </div>
               </div>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={handleCopy}
-                disabled={!data}
-                className="h-7 px-2 text-xs text-muted-foreground hover:text-foreground"
-              >
-                {copied ? <Check className="w-3.5 h-3.5 mr-1" /> : <Copy className="w-3.5 h-3.5 mr-1" />}
-                {copied ? "Copied" : "Copy"}
-              </Button>
+              <div className="flex items-center gap-1">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={handleCopy}
+                  disabled={!data}
+                  className="h-7 px-2 text-xs text-muted-foreground hover:text-foreground"
+                  aria-label="Copy JSON to clipboard"
+                >
+                  {copied ? <Check className="w-3.5 h-3.5 mr-1" /> : <Copy className="w-3.5 h-3.5 mr-1" />}
+                  {copied ? "Copied" : "Copy"}
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={handleDownload}
+                  disabled={!data}
+                  className="h-7 px-2 text-xs text-muted-foreground hover:text-foreground"
+                  aria-label="Download evidence package as JSON"
+                >
+                  {downloaded ? <Check className="w-3.5 h-3.5 mr-1" /> : <Download className="w-3.5 h-3.5 mr-1" />}
+                  {downloaded ? "Saved" : "Download"}
+                </Button>
+              </div>
             </div>
 
             {/* System toggle */}
