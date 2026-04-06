@@ -7,7 +7,7 @@ import WaitlistForm from "../components/landing/WaitlistForm";
 import Testimonials from "../components/landing/Testimonials";
 import Footer from "../components/landing/Footer";
 
-const HERO_IMAGE = "/__generating__/img_551d64c0acc0.png";
+const HERO_IMAGE = "https://media.base44.com/images/public/69d2fa4ba58632a6c6429f1e/3d3c62bee_generated_7174fe43.png";
 
 export default function Landing() {
   const waitlistRef = useRef(null);
