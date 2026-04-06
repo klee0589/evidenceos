@@ -1,4 +1,4 @@
-import { Shield, Zap, Copy, Check, LogOut } from "lucide-react";
+import { Shield, Zap, Copy, Check, LogOut, Key } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -13,7 +13,12 @@ export default function DashboardHeader({ user, plan }) {
   const limit = API_LIMITS[plan] || 100;
 
   const copyKey = () => {
-    navigator.clipboard.writeText(apiKey);
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(apiKey);
+    } else {
+      const el = document.getElementById("api-key-input");
+      if (el) { el.select(); document.execCommand("copy"); }
+    }
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
@@ -47,14 +52,21 @@ export default function DashboardHeader({ user, plan }) {
           </Badge>
 
           {/* API Key */}
-          <button
-            onClick={copyKey}
-            className="flex items-center gap-2 text-xs font-mono px-3 py-1.5 rounded-lg border border-border/60 bg-secondary/50 hover:bg-secondary transition-colors"
-          >
-            <span className="text-muted-foreground">Key:</span>
-            <span className="text-foreground">{apiKey.slice(0, 8)}••••••••</span>
-            {copied ? <Check className="w-3 h-3 text-primary" /> : <Copy className="w-3 h-3 text-muted-foreground" />}
-          </button>
+          <div className="flex items-center gap-1 rounded-lg border border-border/60 bg-secondary/50 overflow-hidden">
+            <Key className="w-3 h-3 text-muted-foreground ml-2.5 flex-shrink-0" />
+            <input
+              id="api-key-input"
+              readOnly
+              value={apiKey}
+              className="text-xs font-mono bg-transparent text-foreground px-2 py-1.5 w-48 outline-none select-all cursor-text"
+            />
+            <button
+              onClick={copyKey}
+              className="flex items-center gap-1 px-2.5 py-1.5 hover:bg-secondary transition-colors border-l border-border/60"
+            >
+              {copied ? <Check className="w-3.5 h-3.5 text-primary" /> : <Copy className="w-3.5 h-3.5 text-muted-foreground" />}
+            </button>
+          </div>
 
           {plan !== "pro" && (
             <Link to="/pricing">
