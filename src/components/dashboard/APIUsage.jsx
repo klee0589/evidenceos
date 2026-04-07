@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
+import { base44 } from "@/api/base44Client";
 import { RefreshCw, Zap, Clock, AlertTriangle, Activity } from "lucide-react";
 
-const API_BASE = "https://evidenceos-api.onrender.com";
+
 
 function StatCard({ label, value, sub }) {
   return (
@@ -57,12 +58,8 @@ export default function APIUsage({ apiKey, plan }) {
     else setLoading(true);
     setError(null);
     try {
-      const res = await fetch(`${API_BASE}/api/usage`, {
-        headers: { "x-api-key": apiKey },
-      });
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const json = await res.json();
-      setData(json.data ?? json);
+      const res = await base44.functions.invoke("getUsage", {});
+      setData(res.data);
     } catch (e) {
       setError(e.message);
     } finally {
