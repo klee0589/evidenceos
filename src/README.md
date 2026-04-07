@@ -1,44 +1,217 @@
-# EvidenceOS
+<div align="center">
 
-**Sandbox API + Compliance Reports for Identity & Access Reviews**
+<img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=900&h=200&fit=crop&crop=center" alt="EvidenceOS Banner" width="100%" style="border-radius: 12px;" />
 
-EvidenceOS is a production-grade sandbox API that simulates Okta, AWS, GitHub, Google Workspace, and more — and generates audit-ready compliance reports. Test workflows, demo to customers, build SOC 2 evidence, and show value in seconds. No real data. No setup.
+<br/><br/>
+
+<h1>🛡️ EvidenceOS</h1>
+
+<p><strong>The Sandbox API for Identity & Access Compliance</strong></p>
+
+<p>
+  <img src="https://img.shields.io/badge/API-v1-4ade80?style=for-the-badge&logo=fastapi&logoColor=white" />
+  <img src="https://img.shields.io/badge/Built%20with-React-61dafb?style=for-the-badge&logo=react&logoColor=white" />
+  <img src="https://img.shields.io/badge/Backend-Deno-000000?style=for-the-badge&logo=deno&logoColor=white" />
+  <img src="https://img.shields.io/badge/Billing-Stripe-635bff?style=for-the-badge&logo=stripe&logoColor=white" />
+  <img src="https://img.shields.io/badge/Status-Live-4ade80?style=for-the-badge" />
+</p>
+
+<p>Simulate Okta, AWS, GitHub, Google Workspace & more. Generate audit-ready SOC 2 reports.<br/>No real data. No setup. Just instant compliance evidence.</p>
+
+<a href="https://evidenceos-api.onrender.com/api/demo/access-review"><strong>🚀 Try the Demo API →</strong></a>
+
+</div>
 
 ---
 
-## 🚀 What It Does
+## ✨ What is EvidenceOS?
 
-- **Simulate 8 identity systems** — Google Workspace, GitHub, AWS IAM, Okta, Azure AD, Salesforce, Jira, ServiceNow
-- **Generate audit-ready JSON reports** — access reviews, user inventories, flagged accounts, MFA status
-- **Deterministic, realistic responses** — same inputs produce consistent outputs for reproducible testing
-- **Webhook support** — simulate real-time identity events
-- **Compliance reporting** — SOC 2-ready evidence packages downloadable as JSON
+EvidenceOS is a **production-grade sandbox API** that simulates enterprise identity systems and generates audit-ready compliance reports. Whether you're building a security product, demoing to customers, or testing SOC 2 workflows — EvidenceOS gives you realistic, deterministic data instantly.
+
+```bash
+# No API key needed — try it right now ⚡
+curl https://evidenceos-api.onrender.com/api/demo/access-review?system=github
+```
 
 ---
 
-## 🏗 Architecture
+## 🎯 Key Features
+
+| Feature | Description |
+|---|---|
+| 🏢 **8 Identity Systems** | Google Workspace, GitHub, AWS IAM, Okta, Azure AD, Salesforce, Jira, ServiceNow |
+| 📋 **Audit-Ready Reports** | SOC 2 evidence packages, access reviews, MFA status, flagged accounts |
+| ♻️ **Deterministic Responses** | Same inputs = same outputs. Perfect for reproducible tests |
+| 🔔 **Webhook Simulation** | Real-time identity event streams |
+| ⚡ **Zero Setup** | Get an API key in seconds, no infrastructure needed |
+| 🔐 **Secure by Design** | API keys server-side only, Stripe webhook validation, signed secrets |
+
+---
+
+## 🚀 Quick Start
+
+### 1. Get your API key (free)
+
+Sign up at [evidenceos.com](https://evidenceos.com) — you'll get an API key instantly.
+
+### 2. Make your first call
+
+```bash
+# Demo endpoint — no auth required
+curl "https://evidenceos-api.onrender.com/api/demo/access-review?system=github"
+```
+
+```json
+{
+  "status": "Warning",
+  "summary": "3 of 8 users flagged for review",
+  "system": "github",
+  "total_users": 8,
+  "flagged": 3,
+  "users": [
+    { "login": "dev-1", "role": "owner",  "mfa": false, "flag": "⚠️ MFA disabled" },
+    { "login": "dev-2", "role": "member", "mfa": false, "flag": "⚠️ MFA disabled" },
+    { "login": "dev-3", "role": "member", "mfa": true  }
+  ]
+}
+```
+
+### 3. Authenticated usage
+
+```bash
+curl https://evidenceos-api.onrender.com/api/v1/usage \
+  -H "X-API-Key: eos_your_key_here"
+```
+
+---
+
+## 🌐 Supported Systems
+
+| System | Status | `?system=` param |
+|---|:---:|---|
+| 🔵 Google Workspace | ✅ **Live** | *(default)* |
+| 🐙 GitHub | ✅ **Live** | `github` |
+| 🟠 AWS IAM | ✅ **Live** | `aws` |
+| 🔷 Okta | ✅ **Live** | `okta` |
+| 🔵 Azure AD | 🔜 Coming Soon | `azure-ad` |
+| ☁️ Salesforce | 🔜 Coming Soon | `salesforce` |
+| 🟦 Jira | 🔜 Coming Soon | `jira` |
+| ⚙️ ServiceNow | 🔜 Coming Soon | `servicenow` |
+
+---
+
+## 📡 API Reference
+
+**Base URL:** `https://evidenceos-api.onrender.com`
+
+### Public Endpoints
+
+#### `GET /api/demo/access-review`
+Simulated access review — no auth required.
+
+```bash
+curl "https://evidenceos-api.onrender.com/api/demo/access-review?system=aws"
+curl "https://evidenceos-api.onrender.com/api/demo/access-review?system=okta"
+```
+
+#### `POST /api/auth/register`
+Register a new user and receive an API key.
+
+```bash
+curl -X POST https://evidenceos-api.onrender.com/api/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{"name": "Jane Doe", "email": "jane@company.com"}'
+```
+
+### Authenticated Endpoints
+
+#### `GET /api/v1/usage`
+Returns usage metrics — daily calls, limits, breakdowns by system and endpoint.
+
+```bash
+curl https://evidenceos-api.onrender.com/api/v1/usage \
+  -H "X-API-Key: eos_your_key_here"
+```
+
+**Response shape:**
+```json
+{
+  "today":  { "calls": 142, "limit": 10000, "remaining": 9858 },
+  "period": { "totalCalls": 4201, "totalErrors": 12, "avgResponseMs": 87 },
+  "bySystem":   [{ "system": "github", "calls": 1200 }],
+  "byEndpoint": [{ "endpoint": "/access-review", "calls": 980 }],
+  "daily":      [{ "date": "2026-04-07", "calls": 142 }]
+}
+```
+
+### Error Codes
+
+| Code | Meaning |
+|---|---|
+| `401` | Missing or invalid API key |
+| `403` | Plan limit exceeded |
+| `429` | Rate limit — slow down |
+| `500` | Server error — try again shortly |
+
+---
+
+## 🏗️ Architecture
 
 ```
-┌──────────────────────────────────────────────────────────┐
-│                      Frontend (React)                    │
-│   Landing Page · Dashboard · Pricing · API Demo          │
-│   Built with: Vite + React + Tailwind + shadcn/ui        │
-└──────────────────┬───────────────────────────────────────┘
-                   │  base44 SDK (functions.invoke)
-┌──────────────────▼───────────────────────────────────────┐
-│               Backend Functions (Deno)                   │
-│   getUsage · registerUser · createCheckoutSession        │
-│   stripeWebhook · createPortalSession · notifyPlanChange │
-└──────────────────┬───────────────────────────────────────┘
-                   │  HTTPS
-┌──────────────────▼───────────────────────────────────────┐
-│          EvidenceOS External API                         │
-│   https://evidenceos-api.onrender.com                    │
-│   /api/v1/usage  ·  /api/auth/register                   │
-│   /api/demo/access-review?system=<system>                │
-│   /api/v1/reports/generate                               │
-└──────────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────┐
+│                    Frontend (React + Vite)               │
+│         Landing · Dashboard · Pricing · Docs             │
+│         Tailwind CSS · shadcn/ui · Framer Motion         │
+└──────────────────────┬──────────────────────────────────┘
+                       │  Base44 SDK  (functions.invoke)
+┌──────────────────────▼──────────────────────────────────┐
+│                 Backend Functions (Deno)                 │
+│  getUsage · registerUser · createCheckoutSession         │
+│  stripeWebhook · createPortalSession · billingWebhook    │
+└──────────────────────┬──────────────────────────────────┘
+                       │  HTTPS + X-API-Key / X-Webhook-Secret
+┌──────────────────────▼──────────────────────────────────┐
+│               EvidenceOS External API                    │
+│         https://evidenceos-api.onrender.com              │
+│   /api/demo/access-review  ·  /api/v1/usage              │
+│   /api/auth/register  ·  /api/v1/billing/webhook         │
+└─────────────────────────────────────────────────────────┘
 ```
+
+---
+
+## 💳 Plans
+
+|  | 🆓 Free | ⚡ Pro |
+|---|:---:|:---:|
+| Daily API calls | 500 | 10,000 |
+| Identity systems | 4 | 8 |
+| Compliance reports | 5 / mo | Unlimited |
+| Webhook support | ✗ | ✓ |
+| Priority support | ✗ | ✓ |
+| **Price** | **$0** | **$29/mo** |
+
+Billing via **Stripe** — upgrade from your dashboard or the pricing page.
+
+---
+
+## 🔐 Security Model
+
+- **API keys are never in the browser.** All EvidenceOS API calls are proxied through Deno backend functions using `EVIDENCEOS_API_KEY` stored server-side.
+- **Stripe webhooks** are validated with `STRIPE_WEBHOOK_SECRET` via `constructEventAsync` before any billing logic runs.
+- **Billing sync** between Stripe → Base44 → EvidenceOS is secured with a shared `BASE44_WEBHOOK_SECRET` header.
+
+---
+
+## ⚙️ Environment Variables
+
+| Secret | Where | Description |
+|---|---|---|
+| `EVIDENCEOS_API_KEY` | Base44 | Master API key — server-side only |
+| `STRIPE_SECRET_KEY` | Base44 | Stripe secret for checkout & portal |
+| `STRIPE_WEBHOOK_SECRET` | Base44 | Stripe webhook signing secret |
+| `STRIPE_PRICE_ID` | Base44 | Stripe Price ID for Pro plan |
+| `BASE44_WEBHOOK_SECRET` | Base44 + Render | Shared secret for billing sync webhook |
 
 ---
 
@@ -46,225 +219,60 @@ EvidenceOS is a production-grade sandbox API that simulates Okta, AWS, GitHub, G
 
 ```
 ├── pages/
-│   ├── Landing.jsx          # Main marketing/landing page
+│   ├── Landing.jsx          # Marketing / landing page
 │   ├── Dashboard.jsx        # Authenticated user dashboard
-│   ├── Pricing.jsx          # Standalone pricing page
-│   └── TestDashboard.jsx    # Internal testing page
+│   ├── Pricing.jsx          # Pricing + upgrade page
+│   ├── Docs.jsx             # API documentation
+│   └── TestDashboard.jsx    # Internal QA test suite
 │
 ├── components/
-│   ├── landing/
-│   │   ├── Navbar.jsx
+│   ├── landing/             # 15+ landing page sections
 │   │   ├── Hero.jsx
-│   │   ├── TrustBar.jsx
-│   │   ├── QuickStartCode.jsx
-│   │   ├── HowItWorks.jsx
-│   │   ├── SystemsSupported.jsx
-│   │   ├── BuiltForDevelopers.jsx
-│   │   ├── DeveloperOnboarding.jsx
-│   │   ├── TestingUseCases.jsx
-│   │   ├── ReportsSection.jsx
-│   │   ├── ResponseFormatExample.jsx
-│   │   ├── ProductionFeatures.jsx
-│   │   ├── APIDemo.jsx          # Live interactive API sandbox
-│   │   ├── AuthSection.jsx
-│   │   ├── WaitlistForm.jsx     # Registration + API key delivery
-│   │   ├── PricingSection.jsx
-│   │   ├── SandboxDisclaimer.jsx
-│   │   └── Footer.jsx
-│   │
+│   │   ├── APIDemo.jsx      # Live interactive sandbox
+│   │   ├── WaitlistForm.jsx # Signup + API key delivery
+│   │   └── ...
 │   └── dashboard/
-│       ├── DashboardHeader.jsx  # Shows API key, plan badge
-│       ├── APIUsage.jsx         # Fetches + displays usage metrics
-│       ├── APISnippets.jsx      # cURL / code examples
-│       ├── QuickStart.jsx
-│       └── ProCallout.jsx
+│       ├── DashboardHeader.jsx   # API key display + plan badge
+│       ├── APIUsage.jsx          # Live usage metrics
+│       └── APISnippets.jsx       # Code examples
 │
-├── functions/                   # Deno backend functions
-│   ├── getUsage.js              # Proxies /api/v1/usage (uses server-side API key)
-│   ├── registerUser.js          # Calls /api/auth/register, returns real API key
-│   ├── createCheckoutSession.js # Stripe checkout
-│   ├── stripeWebhook.js         # Stripe webhook handler
-│   ├── createPortalSession.js   # Stripe billing portal
-│   ├── billingWebhook.js        # Plan change sync
-│   └── notifyPlanChange.js      # Post-upgrade notifications
+├── functions/               # Deno serverless functions
+│   ├── getUsage.js          # Proxies /api/v1/usage
+│   ├── registerUser.js      # Handles signup + API key
+│   ├── stripeWebhook.js     # Stripe event handler
+│   ├── createCheckoutSession.js
+│   ├── createPortalSession.js
+│   └── billingWebhook.js    # Plan sync from Stripe → EvidenceOS
 │
-├── entities/
-│   └── WaitlistSignup.json      # Stores signup form data
-│
-└── App.jsx                      # Router (React Router v6)
+└── entities/
+    └── WaitlistSignup.json  # Signup form data store
 ```
 
 ---
 
-## 🔌 API Reference
-
-### Base URL
-```
-https://evidenceos-api.onrender.com
-```
-
-### Authentication
-All authenticated endpoints require your API key:
-```bash
--H "X-API-Key: eos_your_key_here"
-```
-
----
-
-### Demo Endpoints (No Auth Required)
-
-#### GET `/api/demo/access-review`
-Returns a simulated Google Workspace access review.
+## 🧪 Testing the Billing Webhook
 
 ```bash
-curl https://evidenceos-api.onrender.com/api/demo/access-review
-```
-
-#### GET `/api/demo/access-review?system=<system>`
-Returns a simulated access review for the specified system.
-
-**Supported systems:** `github` · `aws` · `okta` · `azure-ad` · `salesforce` · `jira` · `servicenow`
-
-```bash
-curl https://evidenceos-api.onrender.com/api/demo/access-review?system=github
-curl https://evidenceos-api.onrender.com/api/demo/access-review?system=aws
-curl https://evidenceos-api.onrender.com/api/demo/access-review?system=okta
-```
-
-**Example Response:**
-```json
-{
-  "status": "Warning",
-  "summary": "3 of 8 users flagged for review",
-  "timestamp": "2026-04-07T00:00:00.000Z",
-  "system": "github",
-  "total_users": 8,
-  "flagged": 3,
-  "users": [
-    { "login": "dev-1", "role": "owner", "mfa": false },
-    { "login": "dev-2", "role": "member", "mfa": false },
-    { "login": "dev-3", "role": "member", "mfa": true }
-  ]
-}
-```
-
----
-
-### Authenticated Endpoints
-
-#### GET `/api/v1/usage`
-Returns your API usage metrics for the current period.
-
-```bash
-curl https://evidenceos-api.onrender.com/api/v1/usage \
-  -H "X-API-Key: eos_your_key_here"
-```
-
-**Response:**
-```json
-{
-  "apiKey": "eos_live_...",
-  "plan": "pro",
-  "today": {
-    "calls": 142,
-    "limit": 10000,
-    "remaining": 9858,
-    "resetsAt": "midnight UTC"
-  },
-  "period": {
-    "days": 30,
-    "totalCalls": 4201,
-    "totalErrors": 12,
-    "avgResponseMs": 87
-  },
-  "bySystem": [
-    { "system": "github", "calls": 1200, "errors": 3, "avg_ms": 72 }
-  ],
-  "byEndpoint": [...],
-  "daily": [...]
-}
-```
-
-#### POST `/api/auth/register`
-Register a new user and receive an API key.
-
-```bash
-curl -X POST https://evidenceos-api.onrender.com/api/auth/register \
+# Test the EvidenceOS billing webhook directly
+curl -X POST https://evidenceos-api.onrender.com/api/v1/billing/webhook \
   -H "Content-Type: application/json" \
+  -H "X-Webhook-Secret: YOUR_BASE44_WEBHOOK_SECRET" \
   -d '{
-    "name": "Jane Doe",
-    "email": "jane@company.com",
-    "integration_preference": "GitHub"
+    "event": { "type": "upgrade" },
+    "data": { "email": "jane@company.com", "plan": "pro" },
+    "old_data": { "plan": "free" }
   }'
 ```
 
-**Response:**
-```json
-{
-  "apiKey": "eos_abc123..."
-}
-```
+Expected response: `{ "received": true, "updatedKeys": 1 }`
 
 ---
 
-## 🔐 Security Model
+<div align="center">
 
-- **API keys are never stored in the browser.** All authenticated calls to the EvidenceOS API are proxied through Deno backend functions using the server-side `EVIDENCEOS_API_KEY` secret.
-- **User API keys** (shown in the dashboard) are for display/documentation purposes — the actual server calls use the master key stored in environment variables.
-- **Stripe webhooks** are validated using `STRIPE_WEBHOOK_SECRET` before processing any billing events.
+**Built with ❤️ on [Base44](https://base44.com)**
 
----
+<img src="https://img.shields.io/badge/License-MIT-green?style=flat-square" />
+<img src="https://img.shields.io/badge/Made%20with-☕-brown?style=flat-square" />
 
-## 💳 Plans
-
-| Feature | Free | Pro |
-|---|---|---|
-| Daily API calls | 500 | 10,000 |
-| Systems supported | 4 | 8 |
-| Compliance reports | 5/mo | Unlimited |
-| Webhook support | ✗ | ✓ |
-| Priority support | ✗ | ✓ |
-
-Billing is handled via **Stripe**. Users upgrade through the dashboard or landing page pricing section.
-
----
-
-## ⚙️ Environment Variables (Secrets)
-
-| Secret | Description |
-|---|---|
-| `EVIDENCEOS_API_KEY` | Master API key for the EvidenceOS external API (server-side only) |
-| `STRIPE_SECRET_KEY` | Stripe secret key for checkout + portal sessions |
-| `STRIPE_WEBHOOK_SECRET` | Stripe webhook signing secret for event validation |
-| `STRIPE_PRICE_ID` | Stripe Price ID for the Pro plan |
-
----
-
-## 🧪 Local Development
-
-This project runs on the [Base44](https://base44.com) platform (Vite + React frontend, Deno backend functions). To run locally:
-
-1. Clone the repo
-2. Set environment secrets in your Base44 dashboard under **Settings → Environment Variables**
-3. The frontend auto-connects to your backend functions via the Base44 SDK
-
----
-
-## 📊 Supported Systems
-
-| System | Status | Endpoint param |
-|---|---|---|
-| Google Workspace | ✅ Live | *(default)* |
-| GitHub | ✅ Live | `github` |
-| AWS IAM | ✅ Live | `aws` |
-| Okta | ✅ Live | `okta` |
-| Azure AD | 🔜 Coming soon | `azure-ad` |
-| Salesforce | 🔜 Coming soon | `salesforce` |
-| Jira | 🔜 Coming soon | `jira` |
-| ServiceNow | 🔜 Coming soon | `servicenow` |
-
----
-
-## 📄 License
-
-MIT © EvidenceOS 2026
+</div>
