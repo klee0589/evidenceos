@@ -6,12 +6,21 @@ Deno.serve(async (req) => {
   if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
 
   const apiKey = Deno.env.get("EVIDENCEOS_API_KEY");
-  const res = await fetch("https://evidenceos-api.onrender.com/api/v1/usage", {
-    headers: { "X-API-Key": apiKey },
+  const res = await fetch("https://evidenceos-api.onrender.com/api/v1/usage?days=30", {
+    headers: { "X-API-Key": apiKey, "Content-Type": "application/json" },
   });
+
   const text = await res.text();
   let json;
-  try { json = JSON.parse(text); } catch { return Response.json({ error: "Non-JSON response", status: res.status, body: text.slice(0, 300) }, { status: 502 }); }
-  if (!res.ok) return Response.json({ error: json }, { status: res.status });
-  return Response.json(json.data ?? json);
+  try {
+    json = JSON.parse(text);
+  } catch {
+    return Response.json({ error: "Non-JSON response from EvidenceOS API", body: text.slice(0, 300) }, { status: 502 });
+  }
+
+  if (!res.ok) return Response.json({ error: json.error ?? json }, { status: res.status });
+
+  // API may return response wrapped in { request_id, data: {...}, meta: {...} } or flat
+  const payload = json.data ?? json;
+  return Response.json(payload);
 });
