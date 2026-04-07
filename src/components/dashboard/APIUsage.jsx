@@ -61,7 +61,8 @@ export default function APIUsage({ apiKey, plan }) {
         headers: { "x-api-key": apiKey },
       });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      setData(await res.json());
+      const json = await res.json();
+      setData(json.data ?? json);
     } catch (e) {
       setError(e.message);
     } finally {
