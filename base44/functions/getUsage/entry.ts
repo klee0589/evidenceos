@@ -9,7 +9,9 @@ Deno.serve(async (req) => {
   const res = await fetch("https://evidenceos-api.onrender.com/api/v1/usage", {
     headers: { "X-API-Key": apiKey },
   });
-  const json = await res.json();
+  const text = await res.text();
+  let json;
+  try { json = JSON.parse(text); } catch { return Response.json({ error: "Non-JSON response", status: res.status, body: text.slice(0, 300) }, { status: 502 }); }
   if (!res.ok) return Response.json({ error: json }, { status: res.status });
   return Response.json(json.data ?? json);
 });
