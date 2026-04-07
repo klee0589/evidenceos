@@ -1,4 +1,4 @@
-import { Shield, Zap, Copy, Check, LogOut, Key } from "lucide-react";
+import { Shield, Zap, Copy, Check, LogOut, Key, BookOpen } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -75,6 +75,12 @@ export default function DashboardHeader({ user, plan }) {
               </Button>
             </Link>
           )}
+
+          <Link to="/docs">
+            <Button size="sm" variant="ghost" className="h-8 gap-1.5 text-muted-foreground">
+              <BookOpen className="w-3.5 h-3.5" /> Docs
+            </Button>
+          </Link>
 
           <Button
             size="sm"
