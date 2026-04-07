@@ -26,21 +26,13 @@ export default function WaitlistForm({ formRef }) {
     if (!name || !email) return;
     setSubmitting(true);
     try {
-      // Register with the EvidenceOS API to get an API key
-      const res = await fetch("https://evidenceos-api.onrender.com/api/auth/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, integration_preference: integration, pain_point: painPoint || undefined }),
-      });
-      const data = res.ok ? await res.json() : {};
-      const key = data.apiKey || data.api_key || data.key || "eos_" + Math.random().toString(36).slice(2, 18);
+      const res = await base44.functions.invoke("registerUser", { name, email, integration_preference: integration, pain_point: painPoint || undefined });
+      const key = res.data.apiKey;
       setApiKey(key);
-      // Save to base44 user and waitlist
       await base44.entities.WaitlistSignup.create({ name, email, integration_preference: integration, pain_point: painPoint || undefined });
       await base44.auth.updateMe({ api_key: key, plan: "free" }).catch(() => {});
       toast.success("You're on the list! Here's your API key.");
     } catch {
-      // fallback key
       const key = "eos_" + Math.random().toString(36).slice(2, 18);
       setApiKey(key);
       await base44.entities.WaitlistSignup.create({ name, email, integration_preference: integration, pain_point: painPoint || undefined }).catch(() => {});
