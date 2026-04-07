@@ -7,22 +7,24 @@ const CURL_EXAMPLE = `curl -X GET "https://evidenceos-api.onrender.com/api/demo/
   -H "X-API-Key: your-api-key-here"`;
 
 const RESPONSE_EXAMPLE = `{
-  "status": "Warning",
-  "summary": "2 of 12 users flagged for review",
-  "timestamp": "2026-04-06T08:00:00Z",
-  "users": [
-    {
-      "login": "dev-1",
-      "role": "owner",
-      "mfa_enabled": false,
-      "warning": "MFA not enabled"
-    },
-    {
-      "login": "dev-2",
-      "role": "member",
-      "mfa_enabled": true
-    }
-  ]
+  "request_id": "req_a1b2c3d4e5f6",
+  "data": {
+    "status": "Warning",
+    "summary": "2 of 12 users flagged for review",
+    "system": "github",
+    "total_users": 12,
+    "flagged": 2,
+    "users": [
+      { "login": "dev-1", "role": "owner", "mfa": false, "flag": "mfa_disabled" },
+      { "login": "dev-2", "role": "member", "mfa": true }
+    ]
+  },
+  "meta": {
+    "timestamp": "2026-04-07T08:00:00Z",
+    "version": "v1",
+    "page": 1,
+    "total": 12
+  }
 }`;
 
 export default function QuickStartCode() {

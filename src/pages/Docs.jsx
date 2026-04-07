@@ -107,9 +107,21 @@ export default function Docs() {
 
           <Section id="auth" title="Authentication" icon={Key}>
             <p className="text-sm text-muted-foreground">
-              All authenticated endpoints require your API key passed as a request header.
+              All authenticated endpoints support two auth methods — use whichever fits your stack.
             </p>
-            <CodeBlock language="bash" code={`X-API-Key: eos_your_key_here`} />
+            <div className="grid md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <p className="text-xs font-semibold text-foreground uppercase tracking-widest">API Key Header</p>
+                <CodeBlock language="bash" code={`X-API-Key: eos_your_key_here`} />
+                <p className="text-xs text-muted-foreground">Recommended for server-to-server calls.</p>
+              </div>
+              <div className="space-y-2">
+                <p className="text-xs font-semibold text-foreground uppercase tracking-widest">Bearer Token</p>
+                <CodeBlock language="bash" code={`Authorization: Bearer eos_your_key_here`} />
+                <p className="text-xs text-muted-foreground">Standard OAuth-compatible format.</p>
+              </div>
+            </div>
+            <CodeBlock language="bash" code={`# Using X-API-Key\ncurl https://evidenceos-api.onrender.com/api/v1/usage \\\n  -H "X-API-Key: YOUR_API_KEY"\n\n# Using Bearer Token\ncurl https://evidenceos-api.onrender.com/api/v1/usage \\\n  -H "Authorization: Bearer YOUR_API_KEY"`} />
             <div className="rounded-xl border border-amber-500/20 bg-amber-500/5 p-4 text-sm text-amber-300">
               <strong>Keep your key secret.</strong> Never expose it in frontend code or public repositories.
             </div>
