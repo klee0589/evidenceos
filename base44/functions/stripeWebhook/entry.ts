@@ -4,6 +4,25 @@ import Stripe from 'npm:stripe@14.21.0';
 const stripe = new Stripe(Deno.env.get('STRIPE_SECRET_KEY'));
 const webhookSecret = Deno.env.get('STRIPE_WEBHOOK_SECRET');
 
+async function notifyEvidenceOS(eventType, email, newPlan, oldPlan) {
+  try {
+    await fetch('https://evidenceos-api.onrender.com/api/v1/billing/webhook', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Webhook-Secret': Deno.env.get('BASE44_WEBHOOK_SECRET'),
+      },
+      body: JSON.stringify({
+        event: { type: eventType },
+        data: { email, plan: newPlan },
+        old_data: { plan: oldPlan },
+      }),
+    });
+  } catch (e) {
+    console.error(`EvidenceOS webhook failed (${eventType}):`, e.message);
+  }
+}
+
 Deno.serve(async (req) => {
   if (req.method !== 'POST') {
     return Response.json({ error: 'Method not allowed' }, { status: 405 });
@@ -35,6 +54,7 @@ Deno.serve(async (req) => {
           stripe_customer_id: customerId,
         });
         console.log(`Plan set to pro for ${customerEmail}`);
+        await notifyEvidenceOS('upgrade', customerEmail, 'pro', 'free');
       }
     }
   }
@@ -43,7 +63,6 @@ Deno.serve(async (req) => {
     const sub = event.data.object;
     const customerId = sub.customer;
 
-    // Look up user by stripe_customer_id
     const customers = await stripe.customers.retrieve(customerId);
     const email = customers.email;
     if (email) {
@@ -51,6 +70,7 @@ Deno.serve(async (req) => {
       if (users[0]) {
         await base44.asServiceRole.entities.User.update(users[0].id, { plan: 'free' });
         console.log(`Plan reverted to free for ${email}`);
+        await notifyEvidenceOS('cancel', email, 'free', 'pro');
       }
     }
   }
@@ -60,7 +80,6 @@ Deno.serve(async (req) => {
     const email = invoice.customer_email;
     if (email) {
       console.warn(`Payment failed for ${email}`);
-      // Optionally send a notification — plan stays active until subscription ends
     }
   }
 
