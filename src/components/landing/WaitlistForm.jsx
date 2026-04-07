@@ -32,10 +32,8 @@ export default function WaitlistForm({ formRef }) {
       await base44.entities.WaitlistSignup.create({ name, email, integration_preference: integration, pain_point: painPoint || undefined });
       await base44.auth.updateMe({ api_key: key, plan: "free" }).catch(() => {});
       toast.success("You're on the list! Here's your API key.");
-    } catch {
-      const key = "eos_" + Math.random().toString(36).slice(2, 18);
-      setApiKey(key);
-      await base44.entities.WaitlistSignup.create({ name, email, integration_preference: integration, pain_point: painPoint || undefined }).catch(() => {});
+    } catch (err) {
+      toast.error("Registration failed. Please try again.");
     }
     setSubmitting(false);
     setSubmitted(true);
